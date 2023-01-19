@@ -1,0 +1,9 @@
+# [submodule "kratos-beer-shop"]
+# 	path = kratos-beer-shop
+# 	url = git://github.com/mo3et/kratos-beer-shop.git
+# [submodule "kratos-examples"]
+# 	path = kratos-examples
+# 	url = git://github.com/mo3et/kratos-examples.git
+# [submodule "kratos-gateway"]
+# 	path = kratos-gateway
+# 	url = git://github.com/mo3et/kratos-gateway.git
