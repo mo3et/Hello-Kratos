@@ -7,6 +7,6 @@
 # # echo $(git add -A && git commit -am update && git push)
 
 git add -A
-git commit -m "update"
+git commit -am "update"
 
 git push --verbose
