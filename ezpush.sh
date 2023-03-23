@@ -8,5 +8,5 @@
 
 git add -A
 git commit -m "update"
-sleep 1s
+
 git push --verbose
