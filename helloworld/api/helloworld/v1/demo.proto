@@ -7,11 +7,11 @@ option java_multiple_files = true;
 option java_package = "api.helloworld.v1";
 
 service Demo {
-	rpc CreateDemo (CreateDemoRequest) returns (CreateDemoReply);
-	rpc UpdateDemo (UpdateDemoRequest) returns (UpdateDemoReply);
-	rpc DeleteDemo (DeleteDemoRequest) returns (DeleteDemoReply);
-	rpc GetDemo (GetDemoRequest) returns (GetDemoReply);
-	rpc ListDemo (ListDemoRequest) returns (ListDemoReply);
+  rpc CreateDemo(CreateDemoRequest) returns (CreateDemoReply);
+  rpc UpdateDemo(UpdateDemoRequest) returns (UpdateDemoReply);
+  rpc DeleteDemo(DeleteDemoRequest) returns (DeleteDemoReply);
+  rpc GetDemo(GetDemoRequest) returns (GetDemoReply);
+  rpc ListDemo(ListDemoRequest) returns (ListDemoReply);
 }
 
 message CreateDemoRequest {}
