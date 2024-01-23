@@ -3,23 +3,159 @@ syntax = "proto3";
 package kratosworld.v1;
 
 import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "real-kratosworld/api/kratosworld/v1;v1";
 
 // The greeting service definition.
-service KratosWorldService {
-  // Sends a greeting
-  rpc SayHello(HelloRequest) returns (HelloReply) {
-    option (google.api.http) = {get: "/helloworld/{name}"};
+service KratosWorld {
+  rpc Login(LoginRequest) returns (UserReply) {
+    option (google.api.http) = {
+      post: "/api/users/login"
+      body: "*",
+    };
+  }
+
+  rpc Register(RegisterRequest) returns (UserReply) {
+    option (google.api.http) = {
+      post: "/api/users"
+      body: "*",
+    };
+  }
+
+  rpc GetCurrentUser(GetCurrentUserRequest) returns (UserReply) {
+    option (google.api.http) = {get: "/api/users"};
+  }
+    rpc UpdateUser(UpdateUserRequest) returns (UserReply) {
+    option (google.api.http) = {
+      put: "/api/users"
+      body: "*",
+    };
   }
 }
+message GetCurrentUserRequest{}
 
-// The request message containing the user's name.
-message HelloRequest {
-  string name = 1;
+
+
+message UserReply {
+  message User {
+    string email = 1;
+    string token = 2;
+    string username = 3;
+    string bio = 4;
+    string image = 5;
+  }
+  User user = 1;
 }
 
-// The response message containing the greetings
-message HelloReply {
-  string message = 1;
+message ProfileReply {
+  message Profile {
+    string username = 1;
+    string bio = 2;
+    string image = 3;
+    bool following = 4;
+  }
+
+  Profile profile = 1;
 }
+
+message SingleAricleReply {
+  message Author {
+    string username = 1;
+    string bio = 2;
+    string image = 3;
+    bool following = 4;
+  }
+
+  message Article {
+    string slug = 1;
+    string title = 2;
+    string description = 3;
+    string body = 4;
+    repeated string tagList = 5;
+    google.protobuf.Timestamp createdAt = 6;
+    google.protobuf.Timestamp updatedAt = 7;
+    bool favorited = 8;
+    uint32 favoritesCount = 9;
+    Author author = 10;
+  }
+
+  Article article = 1;
+}
+
+message MultipleAriclesReply {
+  message Author {
+    string username = 1;
+    string bio = 2;
+    string image = 3;
+    bool following = 4;
+  }
+
+  message Articles {
+    string slug = 1;
+    string title = 2;
+    string description = 3;
+    string body = 4;
+    repeated string tagList = 5;
+    google.protobuf.Timestamp createdAt = 6;
+    google.protobuf.Timestamp updatedAt = 7;
+    bool favorited = 8;
+    uint32 favoritesCount = 9;
+    Author author = 10;
+  }
+
+  repeated Articles articles = 1;
+  uint32 articlesCount = 2;
+}
+
+message SIngleCommentReply {
+  message Author {
+    string username = 1;
+    string bio = 2;
+    string image = 3;
+    bool following = 4;
+  }
+
+  message Comment {
+    uint32 id = 1;
+    google.protobuf.Timestamp createdAt = 2;
+    google.protobuf.Timestamp updatedAt = 3;
+    string body = 4;
+    Author author = 5;
+  }
+
+  Comment comment = 1;
+}
+
+message MultipleCommentsReply {
+  message Author {
+    string username = 1;
+    string bio = 2;
+    string image = 3;
+    bool following = 4;
+  }
+
+  message Comments {
+    uint32 id = 1;
+    google.protobuf.Timestamp createdAt = 2;
+    google.protobuf.Timestamp updatedAt = 3;
+    string body = 4;
+    Author author = 5;
+  }
+
+  repeated Comments comments = 1;
+}
+
+message TagListReply {
+  repeated string tags = 1;
+}
+
+message RegisterRequest {
+  message User {
+    string username = 1;
+    string email = 2;
+    string password = 3;
+  }
+  User user = 1;
+}
+message RegisterReply {}
