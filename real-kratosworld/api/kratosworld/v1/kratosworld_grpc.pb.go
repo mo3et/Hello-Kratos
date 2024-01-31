@@ -19,91 +19,755 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	KratosWorldService_SayHello_FullMethodName = "/kratosworld.v1.KratosWorldService/SayHello"
+	KratosWorld_Login_FullMethodName             = "/kratosworld.v1.KratosWorld/Login"
+	KratosWorld_Register_FullMethodName          = "/kratosworld.v1.KratosWorld/Register"
+	KratosWorld_GetCurrentUser_FullMethodName    = "/kratosworld.v1.KratosWorld/GetCurrentUser"
+	KratosWorld_UpdateUser_FullMethodName        = "/kratosworld.v1.KratosWorld/UpdateUser"
+	KratosWorld_GetProfile_FullMethodName        = "/kratosworld.v1.KratosWorld/GetProfile"
+	KratosWorld_FollowUser_FullMethodName        = "/kratosworld.v1.KratosWorld/FollowUser"
+	KratosWorld_UnfollowUser_FullMethodName      = "/kratosworld.v1.KratosWorld/UnfollowUser"
+	KratosWorld_ListArticles_FullMethodName      = "/kratosworld.v1.KratosWorld/ListArticles"
+	KratosWorld_FeedArticles_FullMethodName      = "/kratosworld.v1.KratosWorld/FeedArticles"
+	KratosWorld_GetArticles_FullMethodName       = "/kratosworld.v1.KratosWorld/GetArticles"
+	KratosWorld_CreateArticle_FullMethodName     = "/kratosworld.v1.KratosWorld/CreateArticle"
+	KratosWorld_UpdateArticle_FullMethodName     = "/kratosworld.v1.KratosWorld/UpdateArticle"
+	KratosWorld_DeleteArticle_FullMethodName     = "/kratosworld.v1.KratosWorld/DeleteArticle"
+	KratosWorld_AddComment_FullMethodName        = "/kratosworld.v1.KratosWorld/AddComment"
+	KratosWorld_GetComments_FullMethodName       = "/kratosworld.v1.KratosWorld/GetComments"
+	KratosWorld_DeleteComment_FullMethodName     = "/kratosworld.v1.KratosWorld/DeleteComment"
+	KratosWorld_FavoriteArticle_FullMethodName   = "/kratosworld.v1.KratosWorld/FavoriteArticle"
+	KratosWorld_UnfavoriteArticle_FullMethodName = "/kratosworld.v1.KratosWorld/UnfavoriteArticle"
+	KratosWorld_GetTags_FullMethodName           = "/kratosworld.v1.KratosWorld/GetTags"
 )
 
-// KratosWorldServiceClient is the client API for KratosWorldService service.
+// KratosWorldClient is the client API for KratosWorld service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type KratosWorldServiceClient interface {
-	// Sends a greeting
-	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
+type KratosWorldClient interface {
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*UserReply, error)
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*UserReply, error)
+	GetCurrentUser(ctx context.Context, in *GetCurrentUserRequest, opts ...grpc.CallOption) (*UserReply, error)
+	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserReply, error)
+	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*ProfileReply, error)
+	FollowUser(ctx context.Context, in *FollowUserRequest, opts ...grpc.CallOption) (*ProfileReply, error)
+	UnfollowUser(ctx context.Context, in *UnfollowUserRequest, opts ...grpc.CallOption) (*ProfileReply, error)
+	ListArticles(ctx context.Context, in *ListArticlesRequest, opts ...grpc.CallOption) (*MultipleAriclesReply, error)
+	FeedArticles(ctx context.Context, in *FeedArticlesRequest, opts ...grpc.CallOption) (*MultipleAriclesReply, error)
+	GetArticles(ctx context.Context, in *GetArticlesRequest, opts ...grpc.CallOption) (*SingleAricleReply, error)
+	CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...grpc.CallOption) (*SingleAricleReply, error)
+	UpdateArticle(ctx context.Context, in *UpdateArticleRequest, opts ...grpc.CallOption) (*SingleAricleReply, error)
+	DeleteArticle(ctx context.Context, in *DeleteArticleRequest, opts ...grpc.CallOption) (*SingleAricleReply, error)
+	AddComment(ctx context.Context, in *AddCommentRequest, opts ...grpc.CallOption) (*SingleCommentReply, error)
+	GetComments(ctx context.Context, in *AddCommentRequest, opts ...grpc.CallOption) (*MultipleCommentsReply, error)
+	DeleteComment(ctx context.Context, in *DeleteCommentRequest, opts ...grpc.CallOption) (*SingleCommentReply, error)
+	FavoriteArticle(ctx context.Context, in *FavoriteArticleRequest, opts ...grpc.CallOption) (*SingleAricleReply, error)
+	UnfavoriteArticle(ctx context.Context, in *UnfavoriteArticleRequest, opts ...grpc.CallOption) (*SingleAricleReply, error)
+	GetTags(ctx context.Context, in *GetTagsRequest, opts ...grpc.CallOption) (*TagListReply, error)
 }
 
-type kratosWorldServiceClient struct {
+type kratosWorldClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewKratosWorldServiceClient(cc grpc.ClientConnInterface) KratosWorldServiceClient {
-	return &kratosWorldServiceClient{cc}
+func NewKratosWorldClient(cc grpc.ClientConnInterface) KratosWorldClient {
+	return &kratosWorldClient{cc}
 }
 
-func (c *kratosWorldServiceClient) SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error) {
-	out := new(HelloReply)
-	err := c.cc.Invoke(ctx, KratosWorldService_SayHello_FullMethodName, in, out, opts...)
+func (c *kratosWorldClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*UserReply, error) {
+	out := new(UserReply)
+	err := c.cc.Invoke(ctx, KratosWorld_Login_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// KratosWorldServiceServer is the server API for KratosWorldService service.
-// All implementations must embed UnimplementedKratosWorldServiceServer
+func (c *kratosWorldClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*UserReply, error) {
+	out := new(UserReply)
+	err := c.cc.Invoke(ctx, KratosWorld_Register_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kratosWorldClient) GetCurrentUser(ctx context.Context, in *GetCurrentUserRequest, opts ...grpc.CallOption) (*UserReply, error) {
+	out := new(UserReply)
+	err := c.cc.Invoke(ctx, KratosWorld_GetCurrentUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kratosWorldClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserReply, error) {
+	out := new(UserReply)
+	err := c.cc.Invoke(ctx, KratosWorld_UpdateUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kratosWorldClient) GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*ProfileReply, error) {
+	out := new(ProfileReply)
+	err := c.cc.Invoke(ctx, KratosWorld_GetProfile_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kratosWorldClient) FollowUser(ctx context.Context, in *FollowUserRequest, opts ...grpc.CallOption) (*ProfileReply, error) {
+	out := new(ProfileReply)
+	err := c.cc.Invoke(ctx, KratosWorld_FollowUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kratosWorldClient) UnfollowUser(ctx context.Context, in *UnfollowUserRequest, opts ...grpc.CallOption) (*ProfileReply, error) {
+	out := new(ProfileReply)
+	err := c.cc.Invoke(ctx, KratosWorld_UnfollowUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kratosWorldClient) ListArticles(ctx context.Context, in *ListArticlesRequest, opts ...grpc.CallOption) (*MultipleAriclesReply, error) {
+	out := new(MultipleAriclesReply)
+	err := c.cc.Invoke(ctx, KratosWorld_ListArticles_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kratosWorldClient) FeedArticles(ctx context.Context, in *FeedArticlesRequest, opts ...grpc.CallOption) (*MultipleAriclesReply, error) {
+	out := new(MultipleAriclesReply)
+	err := c.cc.Invoke(ctx, KratosWorld_FeedArticles_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kratosWorldClient) GetArticles(ctx context.Context, in *GetArticlesRequest, opts ...grpc.CallOption) (*SingleAricleReply, error) {
+	out := new(SingleAricleReply)
+	err := c.cc.Invoke(ctx, KratosWorld_GetArticles_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kratosWorldClient) CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...grpc.CallOption) (*SingleAricleReply, error) {
+	out := new(SingleAricleReply)
+	err := c.cc.Invoke(ctx, KratosWorld_CreateArticle_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kratosWorldClient) UpdateArticle(ctx context.Context, in *UpdateArticleRequest, opts ...grpc.CallOption) (*SingleAricleReply, error) {
+	out := new(SingleAricleReply)
+	err := c.cc.Invoke(ctx, KratosWorld_UpdateArticle_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kratosWorldClient) DeleteArticle(ctx context.Context, in *DeleteArticleRequest, opts ...grpc.CallOption) (*SingleAricleReply, error) {
+	out := new(SingleAricleReply)
+	err := c.cc.Invoke(ctx, KratosWorld_DeleteArticle_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kratosWorldClient) AddComment(ctx context.Context, in *AddCommentRequest, opts ...grpc.CallOption) (*SingleCommentReply, error) {
+	out := new(SingleCommentReply)
+	err := c.cc.Invoke(ctx, KratosWorld_AddComment_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kratosWorldClient) GetComments(ctx context.Context, in *AddCommentRequest, opts ...grpc.CallOption) (*MultipleCommentsReply, error) {
+	out := new(MultipleCommentsReply)
+	err := c.cc.Invoke(ctx, KratosWorld_GetComments_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kratosWorldClient) DeleteComment(ctx context.Context, in *DeleteCommentRequest, opts ...grpc.CallOption) (*SingleCommentReply, error) {
+	out := new(SingleCommentReply)
+	err := c.cc.Invoke(ctx, KratosWorld_DeleteComment_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kratosWorldClient) FavoriteArticle(ctx context.Context, in *FavoriteArticleRequest, opts ...grpc.CallOption) (*SingleAricleReply, error) {
+	out := new(SingleAricleReply)
+	err := c.cc.Invoke(ctx, KratosWorld_FavoriteArticle_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kratosWorldClient) UnfavoriteArticle(ctx context.Context, in *UnfavoriteArticleRequest, opts ...grpc.CallOption) (*SingleAricleReply, error) {
+	out := new(SingleAricleReply)
+	err := c.cc.Invoke(ctx, KratosWorld_UnfavoriteArticle_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kratosWorldClient) GetTags(ctx context.Context, in *GetTagsRequest, opts ...grpc.CallOption) (*TagListReply, error) {
+	out := new(TagListReply)
+	err := c.cc.Invoke(ctx, KratosWorld_GetTags_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// KratosWorldServer is the server API for KratosWorld service.
+// All implementations must embed UnimplementedKratosWorldServer
 // for forward compatibility
-type KratosWorldServiceServer interface {
-	// Sends a greeting
-	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
-	mustEmbedUnimplementedKratosWorldServiceServer()
+type KratosWorldServer interface {
+	Login(context.Context, *LoginRequest) (*UserReply, error)
+	Register(context.Context, *RegisterRequest) (*UserReply, error)
+	GetCurrentUser(context.Context, *GetCurrentUserRequest) (*UserReply, error)
+	UpdateUser(context.Context, *UpdateUserRequest) (*UserReply, error)
+	GetProfile(context.Context, *GetProfileRequest) (*ProfileReply, error)
+	FollowUser(context.Context, *FollowUserRequest) (*ProfileReply, error)
+	UnfollowUser(context.Context, *UnfollowUserRequest) (*ProfileReply, error)
+	ListArticles(context.Context, *ListArticlesRequest) (*MultipleAriclesReply, error)
+	FeedArticles(context.Context, *FeedArticlesRequest) (*MultipleAriclesReply, error)
+	GetArticles(context.Context, *GetArticlesRequest) (*SingleAricleReply, error)
+	CreateArticle(context.Context, *CreateArticleRequest) (*SingleAricleReply, error)
+	UpdateArticle(context.Context, *UpdateArticleRequest) (*SingleAricleReply, error)
+	DeleteArticle(context.Context, *DeleteArticleRequest) (*SingleAricleReply, error)
+	AddComment(context.Context, *AddCommentRequest) (*SingleCommentReply, error)
+	GetComments(context.Context, *AddCommentRequest) (*MultipleCommentsReply, error)
+	DeleteComment(context.Context, *DeleteCommentRequest) (*SingleCommentReply, error)
+	FavoriteArticle(context.Context, *FavoriteArticleRequest) (*SingleAricleReply, error)
+	UnfavoriteArticle(context.Context, *UnfavoriteArticleRequest) (*SingleAricleReply, error)
+	GetTags(context.Context, *GetTagsRequest) (*TagListReply, error)
+	mustEmbedUnimplementedKratosWorldServer()
 }
 
-// UnimplementedKratosWorldServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedKratosWorldServiceServer struct {
+// UnimplementedKratosWorldServer must be embedded to have forward compatible implementations.
+type UnimplementedKratosWorldServer struct {
 }
 
-func (UnimplementedKratosWorldServiceServer) SayHello(context.Context, *HelloRequest) (*HelloReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SayHello not implemented")
+func (UnimplementedKratosWorldServer) Login(context.Context, *LoginRequest) (*UserReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedKratosWorldServiceServer) mustEmbedUnimplementedKratosWorldServiceServer() {}
+func (UnimplementedKratosWorldServer) Register(context.Context, *RegisterRequest) (*UserReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
+}
+func (UnimplementedKratosWorldServer) GetCurrentUser(context.Context, *GetCurrentUserRequest) (*UserReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCurrentUser not implemented")
+}
+func (UnimplementedKratosWorldServer) UpdateUser(context.Context, *UpdateUserRequest) (*UserReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
+}
+func (UnimplementedKratosWorldServer) GetProfile(context.Context, *GetProfileRequest) (*ProfileReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProfile not implemented")
+}
+func (UnimplementedKratosWorldServer) FollowUser(context.Context, *FollowUserRequest) (*ProfileReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FollowUser not implemented")
+}
+func (UnimplementedKratosWorldServer) UnfollowUser(context.Context, *UnfollowUserRequest) (*ProfileReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnfollowUser not implemented")
+}
+func (UnimplementedKratosWorldServer) ListArticles(context.Context, *ListArticlesRequest) (*MultipleAriclesReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListArticles not implemented")
+}
+func (UnimplementedKratosWorldServer) FeedArticles(context.Context, *FeedArticlesRequest) (*MultipleAriclesReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FeedArticles not implemented")
+}
+func (UnimplementedKratosWorldServer) GetArticles(context.Context, *GetArticlesRequest) (*SingleAricleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetArticles not implemented")
+}
+func (UnimplementedKratosWorldServer) CreateArticle(context.Context, *CreateArticleRequest) (*SingleAricleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateArticle not implemented")
+}
+func (UnimplementedKratosWorldServer) UpdateArticle(context.Context, *UpdateArticleRequest) (*SingleAricleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateArticle not implemented")
+}
+func (UnimplementedKratosWorldServer) DeleteArticle(context.Context, *DeleteArticleRequest) (*SingleAricleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteArticle not implemented")
+}
+func (UnimplementedKratosWorldServer) AddComment(context.Context, *AddCommentRequest) (*SingleCommentReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddComment not implemented")
+}
+func (UnimplementedKratosWorldServer) GetComments(context.Context, *AddCommentRequest) (*MultipleCommentsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetComments not implemented")
+}
+func (UnimplementedKratosWorldServer) DeleteComment(context.Context, *DeleteCommentRequest) (*SingleCommentReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteComment not implemented")
+}
+func (UnimplementedKratosWorldServer) FavoriteArticle(context.Context, *FavoriteArticleRequest) (*SingleAricleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FavoriteArticle not implemented")
+}
+func (UnimplementedKratosWorldServer) UnfavoriteArticle(context.Context, *UnfavoriteArticleRequest) (*SingleAricleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnfavoriteArticle not implemented")
+}
+func (UnimplementedKratosWorldServer) GetTags(context.Context, *GetTagsRequest) (*TagListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTags not implemented")
+}
+func (UnimplementedKratosWorldServer) mustEmbedUnimplementedKratosWorldServer() {}
 
-// UnsafeKratosWorldServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to KratosWorldServiceServer will
+// UnsafeKratosWorldServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to KratosWorldServer will
 // result in compilation errors.
-type UnsafeKratosWorldServiceServer interface {
-	mustEmbedUnimplementedKratosWorldServiceServer()
+type UnsafeKratosWorldServer interface {
+	mustEmbedUnimplementedKratosWorldServer()
 }
 
-func RegisterKratosWorldServiceServer(s grpc.ServiceRegistrar, srv KratosWorldServiceServer) {
-	s.RegisterService(&KratosWorldService_ServiceDesc, srv)
+func RegisterKratosWorldServer(s grpc.ServiceRegistrar, srv KratosWorldServer) {
+	s.RegisterService(&KratosWorld_ServiceDesc, srv)
 }
 
-func _KratosWorldService_SayHello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HelloRequest)
+func _KratosWorld_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KratosWorldServiceServer).SayHello(ctx, in)
+		return srv.(KratosWorldServer).Login(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: KratosWorldService_SayHello_FullMethodName,
+		FullMethod: KratosWorld_Login_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KratosWorldServiceServer).SayHello(ctx, req.(*HelloRequest))
+		return srv.(KratosWorldServer).Login(ctx, req.(*LoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// KratosWorldService_ServiceDesc is the grpc.ServiceDesc for KratosWorldService service.
+func _KratosWorld_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).Register(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_Register_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).Register(ctx, req.(*RegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KratosWorld_GetCurrentUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCurrentUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).GetCurrentUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_GetCurrentUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).GetCurrentUser(ctx, req.(*GetCurrentUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KratosWorld_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).UpdateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_UpdateUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).UpdateUser(ctx, req.(*UpdateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KratosWorld_GetProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).GetProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_GetProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).GetProfile(ctx, req.(*GetProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KratosWorld_FollowUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FollowUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).FollowUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_FollowUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).FollowUser(ctx, req.(*FollowUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KratosWorld_UnfollowUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnfollowUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).UnfollowUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_UnfollowUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).UnfollowUser(ctx, req.(*UnfollowUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KratosWorld_ListArticles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListArticlesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).ListArticles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_ListArticles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).ListArticles(ctx, req.(*ListArticlesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KratosWorld_FeedArticles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FeedArticlesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).FeedArticles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_FeedArticles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).FeedArticles(ctx, req.(*FeedArticlesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KratosWorld_GetArticles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetArticlesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).GetArticles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_GetArticles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).GetArticles(ctx, req.(*GetArticlesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KratosWorld_CreateArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).CreateArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_CreateArticle_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).CreateArticle(ctx, req.(*CreateArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KratosWorld_UpdateArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).UpdateArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_UpdateArticle_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).UpdateArticle(ctx, req.(*UpdateArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KratosWorld_DeleteArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).DeleteArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_DeleteArticle_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).DeleteArticle(ctx, req.(*DeleteArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KratosWorld_AddComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddCommentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).AddComment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_AddComment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).AddComment(ctx, req.(*AddCommentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KratosWorld_GetComments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddCommentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).GetComments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_GetComments_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).GetComments(ctx, req.(*AddCommentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KratosWorld_DeleteComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteCommentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).DeleteComment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_DeleteComment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).DeleteComment(ctx, req.(*DeleteCommentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KratosWorld_FavoriteArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FavoriteArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).FavoriteArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_FavoriteArticle_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).FavoriteArticle(ctx, req.(*FavoriteArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KratosWorld_UnfavoriteArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnfavoriteArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).UnfavoriteArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_UnfavoriteArticle_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).UnfavoriteArticle(ctx, req.(*UnfavoriteArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KratosWorld_GetTags_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTagsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KratosWorldServer).GetTags(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KratosWorld_GetTags_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KratosWorldServer).GetTags(ctx, req.(*GetTagsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// KratosWorld_ServiceDesc is the grpc.ServiceDesc for KratosWorld service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var KratosWorldService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "kratosworld.v1.KratosWorldService",
-	HandlerType: (*KratosWorldServiceServer)(nil),
+var KratosWorld_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kratosworld.v1.KratosWorld",
+	HandlerType: (*KratosWorldServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SayHello",
-			Handler:    _KratosWorldService_SayHello_Handler,
+			MethodName: "Login",
+			Handler:    _KratosWorld_Login_Handler,
+		},
+		{
+			MethodName: "Register",
+			Handler:    _KratosWorld_Register_Handler,
+		},
+		{
+			MethodName: "GetCurrentUser",
+			Handler:    _KratosWorld_GetCurrentUser_Handler,
+		},
+		{
+			MethodName: "UpdateUser",
+			Handler:    _KratosWorld_UpdateUser_Handler,
+		},
+		{
+			MethodName: "GetProfile",
+			Handler:    _KratosWorld_GetProfile_Handler,
+		},
+		{
+			MethodName: "FollowUser",
+			Handler:    _KratosWorld_FollowUser_Handler,
+		},
+		{
+			MethodName: "UnfollowUser",
+			Handler:    _KratosWorld_UnfollowUser_Handler,
+		},
+		{
+			MethodName: "ListArticles",
+			Handler:    _KratosWorld_ListArticles_Handler,
+		},
+		{
+			MethodName: "FeedArticles",
+			Handler:    _KratosWorld_FeedArticles_Handler,
+		},
+		{
+			MethodName: "GetArticles",
+			Handler:    _KratosWorld_GetArticles_Handler,
+		},
+		{
+			MethodName: "CreateArticle",
+			Handler:    _KratosWorld_CreateArticle_Handler,
+		},
+		{
+			MethodName: "UpdateArticle",
+			Handler:    _KratosWorld_UpdateArticle_Handler,
+		},
+		{
+			MethodName: "DeleteArticle",
+			Handler:    _KratosWorld_DeleteArticle_Handler,
+		},
+		{
+			MethodName: "AddComment",
+			Handler:    _KratosWorld_AddComment_Handler,
+		},
+		{
+			MethodName: "GetComments",
+			Handler:    _KratosWorld_GetComments_Handler,
+		},
+		{
+			MethodName: "DeleteComment",
+			Handler:    _KratosWorld_DeleteComment_Handler,
+		},
+		{
+			MethodName: "FavoriteArticle",
+			Handler:    _KratosWorld_FavoriteArticle_Handler,
+		},
+		{
+			MethodName: "UnfavoriteArticle",
+			Handler:    _KratosWorld_UnfavoriteArticle_Handler,
+		},
+		{
+			MethodName: "GetTags",
+			Handler:    _KratosWorld_GetTags_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

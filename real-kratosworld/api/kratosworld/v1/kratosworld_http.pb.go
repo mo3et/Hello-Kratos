@@ -19,59 +19,760 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationKratosWorldServiceSayHello = "/kratosworld.v1.KratosWorldService/SayHello"
+const OperationKratosWorldAddComment = "/kratosworld.v1.KratosWorld/AddComment"
+const OperationKratosWorldCreateArticle = "/kratosworld.v1.KratosWorld/CreateArticle"
+const OperationKratosWorldDeleteArticle = "/kratosworld.v1.KratosWorld/DeleteArticle"
+const OperationKratosWorldDeleteComment = "/kratosworld.v1.KratosWorld/DeleteComment"
+const OperationKratosWorldFavoriteArticle = "/kratosworld.v1.KratosWorld/FavoriteArticle"
+const OperationKratosWorldFeedArticles = "/kratosworld.v1.KratosWorld/FeedArticles"
+const OperationKratosWorldFollowUser = "/kratosworld.v1.KratosWorld/FollowUser"
+const OperationKratosWorldGetArticles = "/kratosworld.v1.KratosWorld/GetArticles"
+const OperationKratosWorldGetComments = "/kratosworld.v1.KratosWorld/GetComments"
+const OperationKratosWorldGetCurrentUser = "/kratosworld.v1.KratosWorld/GetCurrentUser"
+const OperationKratosWorldGetProfile = "/kratosworld.v1.KratosWorld/GetProfile"
+const OperationKratosWorldGetTags = "/kratosworld.v1.KratosWorld/GetTags"
+const OperationKratosWorldListArticles = "/kratosworld.v1.KratosWorld/ListArticles"
+const OperationKratosWorldLogin = "/kratosworld.v1.KratosWorld/Login"
+const OperationKratosWorldRegister = "/kratosworld.v1.KratosWorld/Register"
+const OperationKratosWorldUnfavoriteArticle = "/kratosworld.v1.KratosWorld/UnfavoriteArticle"
+const OperationKratosWorldUnfollowUser = "/kratosworld.v1.KratosWorld/UnfollowUser"
+const OperationKratosWorldUpdateArticle = "/kratosworld.v1.KratosWorld/UpdateArticle"
+const OperationKratosWorldUpdateUser = "/kratosworld.v1.KratosWorld/UpdateUser"
 
-type KratosWorldServiceHTTPServer interface {
-	// SayHello Sends a greeting
-	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
+type KratosWorldHTTPServer interface {
+	AddComment(context.Context, *AddCommentRequest) (*SingleCommentReply, error)
+	CreateArticle(context.Context, *CreateArticleRequest) (*SingleAricleReply, error)
+	DeleteArticle(context.Context, *DeleteArticleRequest) (*SingleAricleReply, error)
+	DeleteComment(context.Context, *DeleteCommentRequest) (*SingleCommentReply, error)
+	FavoriteArticle(context.Context, *FavoriteArticleRequest) (*SingleAricleReply, error)
+	FeedArticles(context.Context, *FeedArticlesRequest) (*MultipleAriclesReply, error)
+	FollowUser(context.Context, *FollowUserRequest) (*ProfileReply, error)
+	GetArticles(context.Context, *GetArticlesRequest) (*SingleAricleReply, error)
+	GetComments(context.Context, *AddCommentRequest) (*MultipleCommentsReply, error)
+	GetCurrentUser(context.Context, *GetCurrentUserRequest) (*UserReply, error)
+	GetProfile(context.Context, *GetProfileRequest) (*ProfileReply, error)
+	GetTags(context.Context, *GetTagsRequest) (*TagListReply, error)
+	ListArticles(context.Context, *ListArticlesRequest) (*MultipleAriclesReply, error)
+	Login(context.Context, *LoginRequest) (*UserReply, error)
+	Register(context.Context, *RegisterRequest) (*UserReply, error)
+	UnfavoriteArticle(context.Context, *UnfavoriteArticleRequest) (*SingleAricleReply, error)
+	UnfollowUser(context.Context, *UnfollowUserRequest) (*ProfileReply, error)
+	UpdateArticle(context.Context, *UpdateArticleRequest) (*SingleAricleReply, error)
+	UpdateUser(context.Context, *UpdateUserRequest) (*UserReply, error)
 }
 
-func RegisterKratosWorldServiceHTTPServer(s *http.Server, srv KratosWorldServiceHTTPServer) {
+func RegisterKratosWorldHTTPServer(s *http.Server, srv KratosWorldHTTPServer) {
 	r := s.Route("/")
-	r.GET("/helloworld/{name}", _KratosWorldService_SayHello0_HTTP_Handler(srv))
+	r.POST("/api/users/login", _KratosWorld_Login0_HTTP_Handler(srv))
+	r.POST("/api/users", _KratosWorld_Register0_HTTP_Handler(srv))
+	r.GET("/api/user", _KratosWorld_GetCurrentUser0_HTTP_Handler(srv))
+	r.PUT("/api/user", _KratosWorld_UpdateUser0_HTTP_Handler(srv))
+	r.GET("/api/profiles/{username}", _KratosWorld_GetProfile0_HTTP_Handler(srv))
+	r.POST("/api/profiles/{username}/follow", _KratosWorld_FollowUser0_HTTP_Handler(srv))
+	r.DELETE("/api/profiles/{username}/follow", _KratosWorld_UnfollowUser0_HTTP_Handler(srv))
+	r.GET("/api/articles", _KratosWorld_ListArticles0_HTTP_Handler(srv))
+	r.GET("/api/articles/feed", _KratosWorld_FeedArticles0_HTTP_Handler(srv))
+	r.GET("/api/articles/{slug}", _KratosWorld_GetArticles0_HTTP_Handler(srv))
+	r.POST("/api/articles", _KratosWorld_CreateArticle0_HTTP_Handler(srv))
+	r.PUT("/api/articles/{slug}", _KratosWorld_UpdateArticle0_HTTP_Handler(srv))
+	r.DELETE("/api/articles/{slug}", _KratosWorld_DeleteArticle0_HTTP_Handler(srv))
+	r.POST("/api/articles/{slug}/comments", _KratosWorld_AddComment0_HTTP_Handler(srv))
+	r.GET("/api/articles/{slug}/comments", _KratosWorld_GetComments0_HTTP_Handler(srv))
+	r.DELETE("/api/articles/{slug}/comments/{id}", _KratosWorld_DeleteComment0_HTTP_Handler(srv))
+	r.POST("/api/articles/{slug}/favorite", _KratosWorld_FavoriteArticle0_HTTP_Handler(srv))
+	r.DELETE("/api/articles/{slug}/favorite", _KratosWorld_UnfavoriteArticle0_HTTP_Handler(srv))
+	r.GET("/api/tags", _KratosWorld_GetTags0_HTTP_Handler(srv))
 }
 
-func _KratosWorldService_SayHello0_HTTP_Handler(srv KratosWorldServiceHTTPServer) func(ctx http.Context) error {
+func _KratosWorld_Login0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in HelloRequest
+		var in LoginRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldLogin)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Login(ctx, req.(*LoginRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UserReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _KratosWorld_Register0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RegisterRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldRegister)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Register(ctx, req.(*RegisterRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UserReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _KratosWorld_GetCurrentUser0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetCurrentUserRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldGetCurrentUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetCurrentUser(ctx, req.(*GetCurrentUserRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UserReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _KratosWorld_UpdateUser0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateUserRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldUpdateUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateUser(ctx, req.(*UpdateUserRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UserReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _KratosWorld_GetProfile0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetProfileRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationKratosWorldServiceSayHello)
+		http.SetOperation(ctx, OperationKratosWorldGetProfile)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.SayHello(ctx, req.(*HelloRequest))
+			return srv.GetProfile(ctx, req.(*GetProfileRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*HelloReply)
+		reply := out.(*ProfileReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-type KratosWorldServiceHTTPClient interface {
-	SayHello(ctx context.Context, req *HelloRequest, opts ...http.CallOption) (rsp *HelloReply, err error)
+func _KratosWorld_FollowUser0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in FollowUserRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldFollowUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.FollowUser(ctx, req.(*FollowUserRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ProfileReply)
+		return ctx.Result(200, reply)
+	}
 }
 
-type KratosWorldServiceHTTPClientImpl struct {
+func _KratosWorld_UnfollowUser0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UnfollowUserRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldUnfollowUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UnfollowUser(ctx, req.(*UnfollowUserRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ProfileReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _KratosWorld_ListArticles0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListArticlesRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldListArticles)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListArticles(ctx, req.(*ListArticlesRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*MultipleAriclesReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _KratosWorld_FeedArticles0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in FeedArticlesRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldFeedArticles)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.FeedArticles(ctx, req.(*FeedArticlesRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*MultipleAriclesReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _KratosWorld_GetArticles0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetArticlesRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldGetArticles)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetArticles(ctx, req.(*GetArticlesRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SingleAricleReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _KratosWorld_CreateArticle0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateArticleRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldCreateArticle)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateArticle(ctx, req.(*CreateArticleRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SingleAricleReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _KratosWorld_UpdateArticle0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateArticleRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldUpdateArticle)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateArticle(ctx, req.(*UpdateArticleRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SingleAricleReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _KratosWorld_DeleteArticle0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteArticleRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldDeleteArticle)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteArticle(ctx, req.(*DeleteArticleRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SingleAricleReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _KratosWorld_AddComment0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in AddCommentRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldAddComment)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.AddComment(ctx, req.(*AddCommentRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SingleCommentReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _KratosWorld_GetComments0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in AddCommentRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldGetComments)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetComments(ctx, req.(*AddCommentRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*MultipleCommentsReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _KratosWorld_DeleteComment0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteCommentRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldDeleteComment)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteComment(ctx, req.(*DeleteCommentRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SingleCommentReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _KratosWorld_FavoriteArticle0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in FavoriteArticleRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldFavoriteArticle)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.FavoriteArticle(ctx, req.(*FavoriteArticleRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SingleAricleReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _KratosWorld_UnfavoriteArticle0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UnfavoriteArticleRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldUnfavoriteArticle)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UnfavoriteArticle(ctx, req.(*UnfavoriteArticleRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SingleAricleReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _KratosWorld_GetTags0_HTTP_Handler(srv KratosWorldHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetTagsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKratosWorldGetTags)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetTags(ctx, req.(*GetTagsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*TagListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+type KratosWorldHTTPClient interface {
+	AddComment(ctx context.Context, req *AddCommentRequest, opts ...http.CallOption) (rsp *SingleCommentReply, err error)
+	CreateArticle(ctx context.Context, req *CreateArticleRequest, opts ...http.CallOption) (rsp *SingleAricleReply, err error)
+	DeleteArticle(ctx context.Context, req *DeleteArticleRequest, opts ...http.CallOption) (rsp *SingleAricleReply, err error)
+	DeleteComment(ctx context.Context, req *DeleteCommentRequest, opts ...http.CallOption) (rsp *SingleCommentReply, err error)
+	FavoriteArticle(ctx context.Context, req *FavoriteArticleRequest, opts ...http.CallOption) (rsp *SingleAricleReply, err error)
+	FeedArticles(ctx context.Context, req *FeedArticlesRequest, opts ...http.CallOption) (rsp *MultipleAriclesReply, err error)
+	FollowUser(ctx context.Context, req *FollowUserRequest, opts ...http.CallOption) (rsp *ProfileReply, err error)
+	GetArticles(ctx context.Context, req *GetArticlesRequest, opts ...http.CallOption) (rsp *SingleAricleReply, err error)
+	GetComments(ctx context.Context, req *AddCommentRequest, opts ...http.CallOption) (rsp *MultipleCommentsReply, err error)
+	GetCurrentUser(ctx context.Context, req *GetCurrentUserRequest, opts ...http.CallOption) (rsp *UserReply, err error)
+	GetProfile(ctx context.Context, req *GetProfileRequest, opts ...http.CallOption) (rsp *ProfileReply, err error)
+	GetTags(ctx context.Context, req *GetTagsRequest, opts ...http.CallOption) (rsp *TagListReply, err error)
+	ListArticles(ctx context.Context, req *ListArticlesRequest, opts ...http.CallOption) (rsp *MultipleAriclesReply, err error)
+	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *UserReply, err error)
+	Register(ctx context.Context, req *RegisterRequest, opts ...http.CallOption) (rsp *UserReply, err error)
+	UnfavoriteArticle(ctx context.Context, req *UnfavoriteArticleRequest, opts ...http.CallOption) (rsp *SingleAricleReply, err error)
+	UnfollowUser(ctx context.Context, req *UnfollowUserRequest, opts ...http.CallOption) (rsp *ProfileReply, err error)
+	UpdateArticle(ctx context.Context, req *UpdateArticleRequest, opts ...http.CallOption) (rsp *SingleAricleReply, err error)
+	UpdateUser(ctx context.Context, req *UpdateUserRequest, opts ...http.CallOption) (rsp *UserReply, err error)
+}
+
+type KratosWorldHTTPClientImpl struct {
 	cc *http.Client
 }
 
-func NewKratosWorldServiceHTTPClient(client *http.Client) KratosWorldServiceHTTPClient {
-	return &KratosWorldServiceHTTPClientImpl{client}
+func NewKratosWorldHTTPClient(client *http.Client) KratosWorldHTTPClient {
+	return &KratosWorldHTTPClientImpl{client}
 }
 
-func (c *KratosWorldServiceHTTPClientImpl) SayHello(ctx context.Context, in *HelloRequest, opts ...http.CallOption) (*HelloReply, error) {
-	var out HelloReply
-	pattern := "/helloworld/{name}"
+func (c *KratosWorldHTTPClientImpl) AddComment(ctx context.Context, in *AddCommentRequest, opts ...http.CallOption) (*SingleCommentReply, error) {
+	var out SingleCommentReply
+	pattern := "/api/articles/{slug}/comments"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationKratosWorldAddComment))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...http.CallOption) (*SingleAricleReply, error) {
+	var out SingleAricleReply
+	pattern := "/api/articles"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationKratosWorldCreateArticle))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) DeleteArticle(ctx context.Context, in *DeleteArticleRequest, opts ...http.CallOption) (*SingleAricleReply, error) {
+	var out SingleAricleReply
+	pattern := "/api/articles/{slug}"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationKratosWorldServiceSayHello))
+	opts = append(opts, http.Operation(OperationKratosWorldDeleteArticle))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) DeleteComment(ctx context.Context, in *DeleteCommentRequest, opts ...http.CallOption) (*SingleCommentReply, error) {
+	var out SingleCommentReply
+	pattern := "/api/articles/{slug}/comments/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationKratosWorldDeleteComment))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) FavoriteArticle(ctx context.Context, in *FavoriteArticleRequest, opts ...http.CallOption) (*SingleAricleReply, error) {
+	var out SingleAricleReply
+	pattern := "/api/articles/{slug}/favorite"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationKratosWorldFavoriteArticle))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) FeedArticles(ctx context.Context, in *FeedArticlesRequest, opts ...http.CallOption) (*MultipleAriclesReply, error) {
+	var out MultipleAriclesReply
+	pattern := "/api/articles/feed"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationKratosWorldFeedArticles))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) FollowUser(ctx context.Context, in *FollowUserRequest, opts ...http.CallOption) (*ProfileReply, error) {
+	var out ProfileReply
+	pattern := "/api/profiles/{username}/follow"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationKratosWorldFollowUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) GetArticles(ctx context.Context, in *GetArticlesRequest, opts ...http.CallOption) (*SingleAricleReply, error) {
+	var out SingleAricleReply
+	pattern := "/api/articles/{slug}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationKratosWorldGetArticles))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) GetComments(ctx context.Context, in *AddCommentRequest, opts ...http.CallOption) (*MultipleCommentsReply, error) {
+	var out MultipleCommentsReply
+	pattern := "/api/articles/{slug}/comments"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationKratosWorldGetComments))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) GetCurrentUser(ctx context.Context, in *GetCurrentUserRequest, opts ...http.CallOption) (*UserReply, error) {
+	var out UserReply
+	pattern := "/api/user"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationKratosWorldGetCurrentUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) GetProfile(ctx context.Context, in *GetProfileRequest, opts ...http.CallOption) (*ProfileReply, error) {
+	var out ProfileReply
+	pattern := "/api/profiles/{username}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationKratosWorldGetProfile))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) GetTags(ctx context.Context, in *GetTagsRequest, opts ...http.CallOption) (*TagListReply, error) {
+	var out TagListReply
+	pattern := "/api/tags"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationKratosWorldGetTags))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) ListArticles(ctx context.Context, in *ListArticlesRequest, opts ...http.CallOption) (*MultipleAriclesReply, error) {
+	var out MultipleAriclesReply
+	pattern := "/api/articles"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationKratosWorldListArticles))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*UserReply, error) {
+	var out UserReply
+	pattern := "/api/users/login"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationKratosWorldLogin))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) Register(ctx context.Context, in *RegisterRequest, opts ...http.CallOption) (*UserReply, error) {
+	var out UserReply
+	pattern := "/api/users"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationKratosWorldRegister))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) UnfavoriteArticle(ctx context.Context, in *UnfavoriteArticleRequest, opts ...http.CallOption) (*SingleAricleReply, error) {
+	var out SingleAricleReply
+	pattern := "/api/articles/{slug}/favorite"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationKratosWorldUnfavoriteArticle))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) UnfollowUser(ctx context.Context, in *UnfollowUserRequest, opts ...http.CallOption) (*ProfileReply, error) {
+	var out ProfileReply
+	pattern := "/api/profiles/{username}/follow"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationKratosWorldUnfollowUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) UpdateArticle(ctx context.Context, in *UpdateArticleRequest, opts ...http.CallOption) (*SingleAricleReply, error) {
+	var out SingleAricleReply
+	pattern := "/api/articles/{slug}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationKratosWorldUpdateArticle))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KratosWorldHTTPClientImpl) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...http.CallOption) (*UserReply, error) {
+	var out UserReply
+	pattern := "/api/user"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationKratosWorldUpdateUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

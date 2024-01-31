@@ -27,6 +27,6 @@ func NewGRPCServer(c *conf.Server, greeter *service.KratosWorldService, logger l
 		opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
 	}
 	srv := grpc.NewServer(opts...)
-	v1.RegisterKratosWorldServiceServer(srv, greeter)
+	v1.RegisterKratosWorldServer(srv, greeter)
 	return srv
 }

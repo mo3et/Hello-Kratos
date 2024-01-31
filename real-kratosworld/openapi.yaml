@@ -3,19 +3,88 @@
 
 openapi: 3.0.3
 info:
-    title: Greeter API
+    title: KratosWorld API
     description: The greeting service definition.
     version: 0.0.1
 paths:
-    /helloworld/{name}:
+    /api/articles:
         get:
             tags:
-                - Greeter
-                - subgroup
-            description: Sends a greeting
-            operationId: Greeter_SayHello
+                - KratosWorld
+            operationId: KratosWorld_ListArticles
             parameters:
-                - name: name
+                - name: tag
+                  in: query
+                  schema:
+                    type: string
+                - name: author
+                  in: query
+                  schema:
+                    type: string
+                - name: favorited
+                  in: query
+                  schema:
+                    type: string
+                - name: limit
+                  in: query
+                  schema:
+                    type: string
+                - name: offset
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.MultipleAriclesReply'
+        post:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_CreateArticle
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/kratosworld.v1.CreateArticleRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.SingleAricleReply'
+    /api/articles/feed:
+        get:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_FeedArticles
+            parameters:
+                - name: limit
+                  in: query
+                  schema:
+                    type: string
+                - name: offset
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.MultipleAriclesReply'
+    /api/articles/{slug}:
+        get:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_GetArticles
+            parameters:
+                - name: slug
                   in: path
                   required: true
                   schema:
@@ -26,14 +95,597 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/helloworld.v1.HelloReply'
+                                $ref: '#/components/schemas/kratosworld.v1.SingleAricleReply'
+        put:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_UpdateArticle
+            parameters:
+                - name: slug
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/kratosworld.v1.UpdateArticleRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.SingleAricleReply'
+        delete:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_DeleteArticle
+            parameters:
+                - name: slug
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.SingleAricleReply'
+    /api/articles/{slug}/comments:
+        get:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_GetComments
+            parameters:
+                - name: slug
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: comment.body
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.MultipleCommentsReply'
+        post:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_AddComment
+            parameters:
+                - name: slug
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/kratosworld.v1.AddCommentRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.SingleCommentReply'
+    /api/articles/{slug}/comments/{id}:
+        delete:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_DeleteComment
+            parameters:
+                - name: slug
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.SingleCommentReply'
+    /api/articles/{slug}/favorite:
+        post:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_FavoriteArticle
+            parameters:
+                - name: slug
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/kratosworld.v1.FavoriteArticleRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.SingleAricleReply'
+        delete:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_UnfavoriteArticle
+            parameters:
+                - name: slug
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.SingleAricleReply'
+    /api/profiles/{username}:
+        get:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_GetProfile
+            parameters:
+                - name: username
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.ProfileReply'
+    /api/profiles/{username}/follow:
+        post:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_FollowUser
+            parameters:
+                - name: username
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/kratosworld.v1.FollowUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.ProfileReply'
+        delete:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_UnfollowUser
+            parameters:
+                - name: username
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.ProfileReply'
+    /api/tags:
+        get:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_GetTags
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.TagListReply'
+    /api/user:
+        get:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_GetCurrentUser
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.UserReply'
+        put:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_UpdateUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/kratosworld.v1.UpdateUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.UserReply'
+    /api/users:
+        post:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_Register
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/kratosworld.v1.RegisterRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.UserReply'
+    /api/users/login:
+        post:
+            tags:
+                - KratosWorld
+            operationId: KratosWorld_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/kratosworld.v1.LoginRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/kratosworld.v1.UserReply'
 components:
     schemas:
-        helloworld.v1.HelloReply:
+        kratosworld.v1.AddCommentRequest:
             type: object
             properties:
-                message:
+                comment:
+                    $ref: '#/components/schemas/kratosworld.v1.AddCommentRequest_Comment'
+                slug:
                     type: string
-            description: The response message containing the greetings
+        kratosworld.v1.AddCommentRequest_Comment:
+            type: object
+            properties:
+                body:
+                    type: string
+        kratosworld.v1.CreateArticleRequest:
+            type: object
+            properties:
+                article:
+                    $ref: '#/components/schemas/kratosworld.v1.CreateArticleRequest_Article'
+        kratosworld.v1.CreateArticleRequest_Article:
+            type: object
+            properties:
+                title:
+                    type: string
+                description:
+                    type: string
+                body:
+                    type: string
+                tagList:
+                    type: array
+                    items:
+                        type: string
+        kratosworld.v1.FavoriteArticleRequest:
+            type: object
+            properties:
+                slug:
+                    type: string
+        kratosworld.v1.FollowUserRequest:
+            type: object
+            properties:
+                username:
+                    type: string
+        kratosworld.v1.LoginRequest:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/kratosworld.v1.LoginRequest_User'
+        kratosworld.v1.LoginRequest_User:
+            type: object
+            properties:
+                email:
+                    type: string
+                password:
+                    type: string
+        kratosworld.v1.MultipleAriclesReply:
+            type: object
+            properties:
+                articles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/kratosworld.v1.MultipleAriclesReply_Articles'
+                articlesCount:
+                    type: integer
+                    format: uint32
+        kratosworld.v1.MultipleAriclesReply_Articles:
+            type: object
+            properties:
+                slug:
+                    type: string
+                title:
+                    type: string
+                description:
+                    type: string
+                body:
+                    type: string
+                tagList:
+                    type: array
+                    items:
+                        type: string
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                favorited:
+                    type: boolean
+                favoritesCount:
+                    type: integer
+                    format: uint32
+                author:
+                    $ref: '#/components/schemas/kratosworld.v1.MultipleAriclesReply_Author'
+        kratosworld.v1.MultipleAriclesReply_Author:
+            type: object
+            properties:
+                username:
+                    type: string
+                bio:
+                    type: string
+                image:
+                    type: string
+                following:
+                    type: boolean
+        kratosworld.v1.MultipleCommentsReply:
+            type: object
+            properties:
+                comments:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/kratosworld.v1.MultipleCommentsReply_Comments'
+        kratosworld.v1.MultipleCommentsReply_Author:
+            type: object
+            properties:
+                username:
+                    type: string
+                bio:
+                    type: string
+                image:
+                    type: string
+                following:
+                    type: boolean
+        kratosworld.v1.MultipleCommentsReply_Comments:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                body:
+                    type: string
+                author:
+                    $ref: '#/components/schemas/kratosworld.v1.MultipleCommentsReply_Author'
+        kratosworld.v1.ProfileReply:
+            type: object
+            properties:
+                profile:
+                    $ref: '#/components/schemas/kratosworld.v1.ProfileReply_Profile'
+        kratosworld.v1.ProfileReply_Profile:
+            type: object
+            properties:
+                username:
+                    type: string
+                bio:
+                    type: string
+                image:
+                    type: string
+                following:
+                    type: boolean
+        kratosworld.v1.RegisterRequest:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/kratosworld.v1.RegisterRequest_User'
+        kratosworld.v1.RegisterRequest_User:
+            type: object
+            properties:
+                username:
+                    type: string
+                email:
+                    type: string
+                password:
+                    type: string
+        kratosworld.v1.SingleAricleReply:
+            type: object
+            properties:
+                article:
+                    $ref: '#/components/schemas/kratosworld.v1.SingleAricleReply_Article'
+        kratosworld.v1.SingleAricleReply_Article:
+            type: object
+            properties:
+                slug:
+                    type: string
+                title:
+                    type: string
+                description:
+                    type: string
+                body:
+                    type: string
+                tagList:
+                    type: array
+                    items:
+                        type: string
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                favorited:
+                    type: boolean
+                favoritesCount:
+                    type: integer
+                    format: uint32
+                author:
+                    $ref: '#/components/schemas/kratosworld.v1.SingleAricleReply_Author'
+        kratosworld.v1.SingleAricleReply_Author:
+            type: object
+            properties:
+                username:
+                    type: string
+                bio:
+                    type: string
+                image:
+                    type: string
+                following:
+                    type: boolean
+        kratosworld.v1.SingleCommentReply:
+            type: object
+            properties:
+                comment:
+                    $ref: '#/components/schemas/kratosworld.v1.SingleCommentReply_Comment'
+        kratosworld.v1.SingleCommentReply_Author:
+            type: object
+            properties:
+                username:
+                    type: string
+                bio:
+                    type: string
+                image:
+                    type: string
+                following:
+                    type: boolean
+        kratosworld.v1.SingleCommentReply_Comment:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                body:
+                    type: string
+                author:
+                    $ref: '#/components/schemas/kratosworld.v1.SingleCommentReply_Author'
+        kratosworld.v1.TagListReply:
+            type: object
+            properties:
+                tags:
+                    type: array
+                    items:
+                        type: string
+        kratosworld.v1.UpdateArticleRequest:
+            type: object
+            properties:
+                article:
+                    $ref: '#/components/schemas/kratosworld.v1.UpdateArticleRequest_Article'
+                slug:
+                    type: string
+        kratosworld.v1.UpdateArticleRequest_Article:
+            type: object
+            properties:
+                title:
+                    type: string
+                description:
+                    type: string
+                body:
+                    type: string
+                tagList:
+                    type: array
+                    items:
+                        type: string
+        kratosworld.v1.UpdateUserRequest:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/kratosworld.v1.UpdateUserRequest_User'
+        kratosworld.v1.UpdateUserRequest_User:
+            type: object
+            properties:
+                email:
+                    type: string
+                token:
+                    type: string
+                username:
+                    type: string
+                bio:
+                    type: string
+                image:
+                    type: string
+        kratosworld.v1.UserReply:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/kratosworld.v1.UserReply_User'
+        kratosworld.v1.UserReply_User:
+            type: object
+            properties:
+                email:
+                    type: string
+                token:
+                    type: string
+                username:
+                    type: string
+                bio:
+                    type: string
+                image:
+                    type: string
 tags:
-    - name: Greeter
+    - name: KratosWorld

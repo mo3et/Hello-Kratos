@@ -27,6 +27,6 @@ func NewHTTPServer(c *conf.Server, greeter *service.KratosWorldService, logger l
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 	srv := http.NewServer(opts...)
-	v1.RegisterKratosWorldServiceHTTPServer(srv, greeter)
+	v1.RegisterKratosWorldHTTPServer(srv, greeter)
 	return srv
 }

@@ -1,0 +1,7 @@
+version: "3"
+name: kratos-world-db
+services:
+  kw-db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: kratosworld

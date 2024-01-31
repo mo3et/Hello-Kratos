@@ -30,9 +30,9 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	}
 	greeterRepo := data.NewGreeterRepo(dataData, logger)
 	greeterUsecase := biz.NewGreeterUsecase(greeterRepo, logger)
-	greeterService := service.NewKratosWorldService(greeterUsecase)
-	grpcServer := server.NewGRPCServer(confServer, greeterService, logger)
-	httpServer := server.NewHTTPServer(confServer, greeterService, logger)
+	kratosWorldService := service.NewKratosWorldService(greeterUsecase, logger)
+	grpcServer := server.NewGRPCServer(confServer, kratosWorldService, logger)
+	httpServer := server.NewHTTPServer(confServer, kratosWorldService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()
